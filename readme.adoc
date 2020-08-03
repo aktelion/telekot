@@ -1,0 +1,6 @@
+= Telekot - telegram bot library in kotlin
+
+Start with options:
+-Dtelegram.bot.token - token string (get from BotFather) -Dtelegram.bot.timeout timeout for long polling (default 500)
+
+https://core.telegram.org/bots#3-how-do-i-create-a-bot[How to create a bot]
