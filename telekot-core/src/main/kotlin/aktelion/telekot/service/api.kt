@@ -22,10 +22,10 @@ interface TelegramApi {
     suspend fun sendMessage(
         chatId: Long,
         text: String,
-        parseMode: String?,
-        disableWebPagePreview: Boolean?,
-        disableNotification: Boolean?,
-        replyToMessageId: Long?,
+        parseMode: String? = null,
+        disableWebPagePreview: Boolean? = null,
+        disableNotification: Boolean? = null,
+        replyToMessageId: Long? = null,
         replyMarkup: InlineKeyboardMarkup?
     ): Message
 }

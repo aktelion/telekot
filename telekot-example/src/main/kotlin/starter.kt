@@ -14,6 +14,10 @@ val apiService by lazy {
 }
 
 fun main() {
+    startBot()
+}
+
+private fun startBot() {
     val longPollingExecutor = LongPollingExecutor(apiService, object : TelegramListener {
         override fun onMessage(message: Message) {
             println("Message: ${message.text}")
@@ -21,11 +25,7 @@ fun main() {
                 apiService.sendMessage(
                     message.chat.id,
                     "Reply-To: ${message.text}",
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
+                    replyMarkup = keyboardManager.makeKeyboardLayout()
                 )
             }
         }
@@ -42,14 +42,18 @@ fun main() {
 object keyboardManager {
     fun makeKeyboardLayout() = keyboard {
         row {
-            cmdButton("Расписание", "/schedule")
-            cmdButton("Рейтинг", "/rating")
+            cmdButton("1", "/1")
+            cmdButton("2", "/2")
+            cmdButton("3", "/3")
         }
         row {
-            cmdButton("Полное расписание", "/full_schedule")
+            cmdButton("4", "/4")
+            cmdButton("4", "/5")
+            cmdButton("5", "/6")
         }
         row {
-            cmdButton("Квиз-альбомы", "/albums")
+            cmdButton("===", "/any")
+            urlButton("link", "http://www.google.com")
         }
     }.toMarkup()
 }

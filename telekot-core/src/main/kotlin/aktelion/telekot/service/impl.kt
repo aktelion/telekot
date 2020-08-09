@@ -35,17 +35,8 @@ interface RetrofitTelegramApiClient {
     @GET("deleteWebhook")
     suspend fun deleteWebhook(): Response<Boolean>
 
-    @FormUrlEncoded
     @POST("sendMessage")
-    suspend fun sendMessage(
-        @Field(MESSAGE_CHAT_ID) chatId: Long,
-        @Field(MESSAGE_TEXT) text: String,
-        @Field(MESSAGE_PARSE_MODE) parseMode: String?,
-        @Field(MESSAGE_DISABLE_WEB_PAGE_PREVIEW) disableWebPagePreview: Boolean?,
-        @Field(MESSAGE_DISABLE_NOTIFICATION) disableNotification: Boolean?,
-        @Field(MESSAGE_REPLY_TO_MESSAGE_ID) replyToMessageId: Long?,
-        @Field(MESSAGE_REPLY_MARKUP) replyMarkup: InlineKeyboardMarkup?
-    ): Response<Message>
+    suspend fun sendMessage(@Body sendMessage: SendMessage): Response<Message>
 
     companion object {
         fun create(token: String, shouldLog: Boolean = false): RetrofitTelegramApiClient {
@@ -84,13 +75,15 @@ class TelegramApiService(val telegramClient: RetrofitTelegramApiClient) : Telegr
         replyToMessageId: Long?,
         replyMarkup: InlineKeyboardMarkup?
     ) = telegramClient.sendMessage(
-        chatId,
-        text,
-        parseMode,
-        disableWebPagePreview,
-        disableNotification,
-        replyToMessageId,
-        replyMarkup
+        SendMessage(
+            chatId,
+            text,
+            parseMode,
+            disableWebPagePreview,
+            disableNotification,
+            replyToMessageId,
+            replyMarkup
+        )
     ).extractResponse()
 
     override suspend fun setWebhook(url: String, maxConnections: Int?, allowedUpdates: List<String>?) =
@@ -143,3 +136,13 @@ class LongPollingExecutor(val apiService: TelegramApiService, val telegramListen
         }
     }
 }
+
+data class SendMessage(
+    val chat_id: Long,
+    val text: String,
+    val parse_mode: String?,
+    val disable_web_page_preview: Boolean?,
+    val disable_notification: Boolean?,
+    val reply_to_message_id: Long?,
+    val reply_markup: InlineKeyboardMarkup?
+)
