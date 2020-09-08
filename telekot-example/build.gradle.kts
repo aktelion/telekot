@@ -6,13 +6,14 @@ plugins {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
     implementation(kotlin("stdlib"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.3.8-1.4.0-rc")
-    implementation(project(":telekot-core"))
+    implementation("aktelion.telekot:telekot-core:0.1")
 }
 
 configure<JavaPluginConvention> {
