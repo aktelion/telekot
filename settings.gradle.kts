@@ -6,5 +6,5 @@ pluginManagement {
 }
 
 rootProject.name = "telekot"
-include(":telekot-core")
-include(":telekot-example")
+include("telekot-core")
+include("telekot-example")

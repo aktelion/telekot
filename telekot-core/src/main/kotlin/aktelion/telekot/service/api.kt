@@ -1,19 +1,24 @@
 package aktelion.telekot.service
 
-import aktelion.telekot.*
+import aktelion.telekot.internal.entities.InlineKeyboardMarkup
+import aktelion.telekot.internal.entities.InternalUpdate
+import aktelion.telekot.internal.entities.Message
+import aktelion.telekot.internal.entities.User
 
 /**
  * Telegram events listener.
  */
 interface TelegramListener {
-    fun onMessage(message: Message)
-    fun onCallback(callbackQuery: CallbackQuery)
+    fun onTextMessage(message: TextMessage) {}
+    fun onCommandMessage(message: CommandMessage) {}
+    fun onTextCallback(callback: TextCallback) {}
+    fun onCommandCallback(callback: CommandCallback) {}
 }
 
-interface TelegramApi {
+interface TelegramClient {
     suspend fun getMe(): User
 
-    suspend fun getUpdates(offset: Long?, limit: Int? = 10, timeout: Int?): List<Update>
+    suspend fun getUpdates(offset: Long?, limit: Int? = 10, timeout: Int?): List<InternalUpdate>
 
     suspend fun setWebhook(url: String, maxConnections: Int? = null, allowedUpdates: List<String>? = null): Boolean
 
@@ -28,4 +33,33 @@ interface TelegramApi {
         replyToMessageId: Long? = null,
         replyMarkup: InlineKeyboardMarkup?
     ): Message
+}
+
+interface TelegramApi {
+    fun sendMessage(
+        chatId: Long,
+        text: String,
+        parseMode: String? = null,
+        disableWebPagePreview: Boolean? = null,
+        disableNotification: Boolean? = null,
+    )
+
+    fun reply(
+        chatId: Long,
+        text: String,
+        parseMode: String? = null,
+        disableWebPagePreview: Boolean? = null,
+        disableNotification: Boolean? = null,
+        replyToMessageId: Long? = null,
+    )
+
+    fun showKeyboard(
+        chatId: Long,
+        text: String,
+        parseMode: String? = null,
+        disableWebPagePreview: Boolean? = null,
+        disableNotification: Boolean? = null,
+        replyToMessageId: Long? = null,
+        replyMarkup: InlineKeyboardMarkup? = null
+    )
 }

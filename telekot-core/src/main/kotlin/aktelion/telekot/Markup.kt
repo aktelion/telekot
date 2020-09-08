@@ -1,5 +1,8 @@
 package aktelion.telekot
 
+import aktelion.telekot.internal.entities.InlineKeyboardButton
+import aktelion.telekot.internal.entities.InlineKeyboardMarkup
+
 abstract class Button() {
     abstract val text: String
     abstract fun toKeyboardButton(): InlineKeyboardButton

@@ -1,16 +1,20 @@
 package aktelion.telekot
 
-import aktelion.telekot.service.LongPollingExecutor
-import aktelion.telekot.service.RetrofitTelegramApiClient
-import aktelion.telekot.service.TelegramApiService
-import aktelion.telekot.service.TelegramListener
+import aktelion.telekot.internal.transport.LongPollingExecutor
+import aktelion.telekot.internal.transport.RetrofitTelegramApi
+import aktelion.telekot.internal.transport.RetrofitTelegramClient
+import aktelion.telekot.service.*
 import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
 
 val token = System.getProperty("telegram.bot.token") ?: throw IllegalArgumentException("No telegram bot token provided")
 
-val apiService by lazy {
-    TelegramApiService(RetrofitTelegramApiClient.create(token, false))
+val telegramClient by lazy {
+    RetrofitTelegramClient(token, false)
+}
+
+val telegramApi by lazy {
+    RetrofitTelegramApi(telegramClient)
 }
 
 fun main() {
@@ -18,11 +22,11 @@ fun main() {
 }
 
 private fun startBot() {
-    val longPollingExecutor = LongPollingExecutor(apiService, object : TelegramListener {
-        override fun onMessage(message: Message) {
+    val longPollingExecutor = LongPollingExecutor(telegramClient, object : TelegramListener {
+        override fun onTextMessage(message: TextMessage) {
             println("Message: ${message.text}")
             runBlocking {
-                apiService.sendMessage(
+                telegramApi.showKeyboard(
                     message.chat.id,
                     "Reply-To: ${message.text}",
                     replyMarkup = keyboardManager.makeKeyboardLayout()
@@ -30,10 +34,17 @@ private fun startBot() {
             }
         }
 
-        override fun onCallback(callbackQuery: CallbackQuery) {
-            println("Callback: ${callbackQuery.data}")
+        override fun onTextCallback(callback: TextCallback) {
+            println("TextCallback: ${callback.text}")
         }
 
+        override fun onCommandMessage(message: CommandMessage) {
+            println("CommandMessage: ${message.command}")
+        }
+
+        override fun onCommandCallback(callback: CommandCallback) {
+            println("CommandCallback: ${callback.command}")
+        }
     })
     longPollingExecutor.start()
     exitProcess(0)

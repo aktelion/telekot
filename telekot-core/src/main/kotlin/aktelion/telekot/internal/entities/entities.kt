@@ -1,6 +1,6 @@
-package aktelion.telekot
+package aktelion.telekot.internal.entities
 
-data class Update(
+data class InternalUpdate(
     val update_id: Long,
     val message: Message?,
     val edited_message: Message? = null,
@@ -62,7 +62,7 @@ data class Location(
 )
 
 data class Message(
-    val message_id: Int,
+    val message_id: Long,
     val from: User?,
     val date: Int,
     val chat: Chat,
@@ -264,7 +264,7 @@ data class CallbackQuery(
 
 data class UpdatesResponse(
     val ok: Boolean,
-    val result: List<Update>
+    val result: List<InternalUpdate>
 )
 
 data class Response<T>(
