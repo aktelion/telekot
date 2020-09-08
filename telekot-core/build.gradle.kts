@@ -3,6 +3,31 @@ version = "1.0-SNAPSHOT"
 
 plugins {
     kotlin("jvm")
+    `maven-publish`
+    `java-library`
+}
+
+apply(plugin = "java-library")
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+apply(plugin = "org.gradle.maven-publish")
+
+publishing {
+    publications {
+        create<MavenPublication>("telekot-core") {
+            artifactId = "telekot-core"
+            version = "0.1"
+            from(components["java"])
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }
 
 repositories {

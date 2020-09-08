@@ -7,14 +7,13 @@ import aktelion.telekot.internal.entities.Message
 import aktelion.telekot.service.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import java.lang.Long
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.concurrent.atomic.AtomicBoolean
 
 class LongPollingExecutor(val clientRetrofit: TelegramClient, val telegramListener: TelegramListener) {
     private val alive = AtomicBoolean(true)
-    private val timeout = Long.getLong("telegram.bot.timeout", 500L)
+    private val timeout = System.getProperty("telegram.bot.timeout", "500L").toLong()
 
     fun start() {
         var offset = 0L
